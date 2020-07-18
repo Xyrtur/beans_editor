@@ -10,14 +10,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        fontFamily: 'RobotoMono',
-        iconTheme: IconThemeData(color: Centre.homeFontColor),
-        primaryTextTheme: TextTheme(
-          bodyText1: TextStyle(color: Colors.white),
+        theme: ThemeData(
+          fontFamily: 'RobotoMono',
+          iconTheme: IconThemeData(color: Centre.homeFontColor),
+          primaryTextTheme: TextTheme(
+            bodyText1: TextStyle(color: Colors.white),
+          ),
         ),
-      ),
-      home: MainBeanPage(),
-    );
+        home: MainBeanPage());
   }
 }

@@ -1,5 +1,7 @@
 import 'package:beanseditor/models/index.dart';
 import 'package:beanseditor/screens/index.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:beanseditor/bloc/title_bloc.dart';
 
 import 'index.dart';
 
@@ -69,7 +71,11 @@ class _BeanTileState extends State<BeanTile> {
 
   void _beanTapped(BuildContext context) {
     Centre.updateNeeded = false;
-    Navigator.push(context, MaterialPageRoute(builder: (context) => BeanPage(widget.bean)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                BlocProvider<TitleBloc>(create: (context) => TitleBloc(), child: BeanPage(widget.bean))));
   }
 
   double _fontSizeForContent() {

@@ -1,4 +1,7 @@
+import 'package:beanseditor/models/index.dart';
 import 'package:beanseditor/utils/SQLHelper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:beanseditor/bloc/title_bloc.dart';
 
 import 'index.dart';
 
@@ -17,6 +20,10 @@ class _BeanPageState extends State<BeanPage> {
   bool _isNewNote = false;
   FocusNode _contentFocus = FocusNode();
   final _titleFocus = FocusNode();
+
+  List<Widget> titleList;
+
+  TitleBloc _titleBloc;
 
   String _titleInitial;
   String _contentInitial;
@@ -47,6 +54,7 @@ class _BeanPageState extends State<BeanPage> {
     _persistenceTimer = new Timer.periodic(Duration(seconds: 5), (timer) {
       _persistData();
     });
+    _titleBloc = BlocProvider.of<TitleBloc>(context);
   }
 
   @override
@@ -54,6 +62,69 @@ class _BeanPageState extends State<BeanPage> {
     if (_editableBean.id == -1 && _editableBean.content.isEmpty) {
       FocusScope.of(context).requestFocus(_titleFocus);
     }
+    Widget titleWidgetContentFocussed = Container(
+      padding: EdgeInsets.all(5),
+      child: Focus(
+        onFocusChange: (hasFocus) {
+          if (hasFocus) {
+            _titleBloc.add(TitleFocused());
+          } else {
+            _titleBloc.add(TitleUnfocused());
+          }
+        },
+        child: TextField(
+          decoration: InputDecoration(
+            isDense: true,
+            border: InputBorder.none,
+          ),
+          onChanged: (str) => updateBean(),
+          maxLines: null,
+          controller: _titleController,
+          focusNode: _titleFocus,
+          style: TextStyle(
+            color: Centre.homeFontColor,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'RobotoMono',
+          ),
+          cursorColor: Centre.cursorColor,
+          keyboardAppearance: Brightness.dark,
+        ),
+      ),
+    );
+    Widget titleWidgetContentUnfocused = Flexible(
+      child: Container(
+        padding: EdgeInsets.all(5),
+        child: Focus(
+          onFocusChange: (hasFocus) {
+            if (hasFocus) {
+              _titleBloc.add(TitleFocused());
+            } else {
+              _titleBloc.add(TitleUnfocused());
+            }
+          },
+          child: TextField(
+            decoration: InputDecoration(
+              isDense: true,
+              border: InputBorder.none,
+            ),
+            onChanged: (str) => updateBean(),
+            maxLines: null,
+            controller: _titleController,
+            focusNode: _titleFocus,
+            style: TextStyle(
+              color: Centre.homeFontColor,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'RobotoMono',
+            ),
+            cursorColor: Centre.cursorColor,
+            keyboardAppearance: Brightness.dark,
+          ),
+        ),
+      ),
+    );
+    titleList = [titleWidgetContentUnfocused, titleWidgetContentFocussed];
 
     return WillPopScope(
       child: Scaffold(
@@ -81,59 +152,46 @@ class _BeanPageState extends State<BeanPage> {
   }
 
   Widget _body(BuildContext context) {
-    return Container(
-      color: Centre.bgNoteColor,
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
-      child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Flexible(
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  child: EditableText(
-                    onChanged: (str) => updateBean(),
-                    maxLines: null,
-                    controller: _titleController,
-                    focusNode: _titleFocus,
-                    style: TextStyle(
-                      color: Centre.homeFontColor,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'RobotoMono',
-                    ),
-                    cursorColor: Centre.cursorColor,
-                    backgroundCursorColor: Centre.cursorColor,
-                  ),
-                ),
-              ),
-              Divider(color: Centre.cursorColor),
-              Flexible(
-                child: Container(
+    return BlocBuilder<TitleBloc, TitleState>(builder: (context, state) {
+      return Container(
+        color: Centre.bgNoteColor,
+        padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+        child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                (titleList[state.props[0]]),
+                Divider(color: Centre.cursorColor),
+                Expanded(
+                  child: Container(
+                    color: Centre.bgNoteColor,
 //                  padding: EdgeInsets.all(5),
-                  child: new DefaultTextStyle(
-                    style: new TextStyle(
-                      inherit: true,
-                      color: Colors.white,
-                      fontFamily: 'RobotoMono',
-                    ),
-                    child: ZefyrScaffold(
-                      child: ZefyrEditor(
-                        controller: _contentController,
-                        focusNode: _contentFocus,
-                        keyboardAppearance: Brightness.dark,
+                    child: new DefaultTextStyle(
+                      style: new TextStyle(
+                        inherit: true,
+                        color: Colors.white,
+                        fontFamily: 'RobotoMono',
+                      ),
+                      child: ZefyrScaffold(
+                        child: ZefyrEditor(
+                          controller: _contentController,
+                          focusNode: _contentFocus,
+                          keyboardAppearance: Brightness.dark,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          left: true,
-          right: true,
-          top: false,
-          bottom: false),
-    );
+              ],
+            ),
+            left: true,
+            right: true,
+            top: false,
+            bottom: false),
+      );
+    });
   }
 
   void _persistData() {
@@ -202,10 +260,8 @@ class _BeanPageState extends State<BeanPage> {
   void updateBean() {
     _editableBean.content = jsonEncode(_contentController.document);
     _editableBean.title = _titleController.text;
-    print('ok so like what the fuck is shit thesame:  ${_editableBean.content == _contentInitial}');
     if (!(_editableBean.title == _titleInitial && _editableBean.content == _contentInitial) || (_isNewNote)) {
       // if changes to note or if new note, change the date last edited
-      print('yeah?');
       _editableBean.date_last_edited = DateTime.now();
       Centre.updateNeeded = true;
     }

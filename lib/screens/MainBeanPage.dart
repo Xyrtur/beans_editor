@@ -1,6 +1,8 @@
 import 'index.dart';
 import 'BeanPage.dart';
 import 'package:rounded_floating_app_bar/rounded_floating_app_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:beanseditor/bloc/title_bloc.dart';
 
 enum viewType { List, Staggered }
 
@@ -66,6 +68,10 @@ class _MainBeanPageState extends State<MainBeanPage> {
 
   void _newBeanTapped(BuildContext context) {
     var emptyBean = new Beans(-1, "", "", DateTime.now(), DateTime.now());
-    Navigator.push(context, MaterialPageRoute(builder: (context) => BeanPage(emptyBean)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                BlocProvider<TitleBloc>(create: (context) => TitleBloc(), child: BeanPage(emptyBean))));
   }
 }

@@ -29,6 +29,9 @@ dependencies:
   zefyr: ^0.11.0
   auto_size_text: ^2.1.0
   rounded_floating_app_bar: 0.1.0
+  flutter_bloc: ^5.0.1
+  equatable: ^1.2.2
+  bloc: ^5.0.1
 
 dev_dependencies:
   flutter_test:
