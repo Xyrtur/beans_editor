@@ -25,7 +25,7 @@ class _MainBeanPageState extends State<MainBeanPage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () => _newBeanTapped(context),
           child: Icon(Icons.add, color: Colors.white),
-          backgroundColor: Centre.cursorColor,
+          backgroundColor: Color(0xFF3e5af3),
         ),
         resizeToAvoidBottomPadding: false,
         body: NestedScrollView(
@@ -33,7 +33,7 @@ class _MainBeanPageState extends State<MainBeanPage> {
             return [
               RoundedFloatingAppBar(
                 elevation: 3,
-                backgroundColor: Centre.bgColor,
+                backgroundColor: Color(0xff272727),
                 snap: true,
                 leading: Image.asset(
                   'images/beans.png',

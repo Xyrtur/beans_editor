@@ -27,9 +27,9 @@ class _BeanTileState extends State<BeanTile> {
     return GestureDetector(
       onTap: () => _beanTapped(context),
       child: Container(
-          height: 150,
+          height: 250,
           decoration: BoxDecoration(
-              border: Border.all(color: Centre.borderColor),
+              border: Border.all(color: Centre.borderColor, width: 2),
               color: Centre.bgColor,
               borderRadius: BorderRadius.all(Radius.circular(8))),
           padding: EdgeInsets.all(8),
