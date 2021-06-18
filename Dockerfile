@@ -27,5 +27,4 @@ ENV PATH "$PATH:/home/developer/flutter/bin"
 RUN flutter pub global activate fvm 
 ENV PATH "$PATH:/home/developer/.pub-cache/bin"
 RUN fvm install 2.0.5
-RUN cd /home/developer/workspace/beans_editor
-RUN fvm use 2.0.5
+RUN cd /home/developer/workspace/beans_editor && fvm use 2.0.5
