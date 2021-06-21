@@ -22,8 +22,8 @@ RUN cd Android/sdk/tools/bin && ./sdkmanager "build-tools;29.0.2" "patcher;v4" "
 ENV PATH "$PATH:/home/developer/Android/sdk/platform-tools"
 
 # Download Flutter SDK
-RUN git clone https://github.com/flutter/flutter.git
-ENV PATH "$PATH:/home/developer/flutter/bin"
-RUN flutter pub global activate fvm 
-ENV PATH "$PATH:/home/developer/.pub-cache/bin"
-RUN fvm install 2.0.5
+#RUN git clone https://github.com/flutter/flutter.git
+#ENV PATH "$PATH:/home/developer/flutter/bin"
+#RUN flutter pub global activate fvm 
+#ENV PATH "$PATH:/home/developer/.pub-cache/bin"
+#RUN fvm install 2.0.5
